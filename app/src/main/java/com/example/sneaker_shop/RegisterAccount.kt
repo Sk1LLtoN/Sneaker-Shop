@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -78,6 +79,11 @@ fun RegistrationScreen(navController: NavController = rememberNavController()) {
                 onValueChange = { name = it },
                 shape = RoundedCornerShape(14.dp),
                 singleLine = true,
+                textStyle = TextStyle(
+                    fontFamily = Raleway,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 14.sp
+                        ),
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -94,6 +100,11 @@ fun RegistrationScreen(navController: NavController = rememberNavController()) {
                 shape = RoundedCornerShape(14.dp),
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                textStyle = TextStyle(
+                    fontFamily = Raleway,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 14.sp
+                ),
                 modifier = Modifier.fillMaxWidth(),
                 isError = !isEmailValid && email.isNotEmpty(),
             )
@@ -115,6 +126,11 @@ fun RegistrationScreen(navController: NavController = rememberNavController()) {
                 } else {
                     PasswordVisualTransformation()
                 },
+                textStyle = TextStyle(
+                    fontFamily = Raleway,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 14.sp
+                ),
                 modifier = Modifier.fillMaxWidth(),
                 trailingIcon = {
                     IconButton(

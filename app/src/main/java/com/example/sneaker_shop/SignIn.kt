@@ -58,68 +58,74 @@ fun SignIn(navController: NavController = rememberNavController()) {
             color = colorResource(id = R.color.sub_text_dark)
 
         )
-
-        Text(
-            text = "Email",
-            modifier = Modifier.padding(end = 310.dp),
-            fontSize = 16.sp,
-            fontFamily = Raleway,
-            fontWeight = FontWeight.Medium
-        )
-        OutlinedTextField(
-            value = email,
-            onValueChange = { email = it },
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Text(
-            text = "Пароль",
-            modifier = Modifier.padding(end = 290.dp),
-            fontSize = 16.sp,
-            fontFamily = Raleway,
-            fontWeight = FontWeight.Medium
-        )
-        OutlinedTextField(
-            value = password,
-            onValueChange = { password = it },
-            singleLine = true,
-            visualTransformation = PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            modifier = Modifier.fillMaxWidth()
-        )
-        Text(
-            text = "Востановить",
-            modifier = Modifier.padding(start = 254.dp),
-            fontSize = 12.sp,
-            fontFamily = Raleway,
-            fontWeight = FontWeight.Normal,
-            color = colorResource(id = R.color.sub_text_dark)
-        )
-        Button(
-            onClick = {
-                println("Email: $email")
-                println("Пароль: $password")
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(50.dp)
-                .padding(top = 16.dp),
-            enabled =email.isNotBlank() &&
-                    password.isNotBlank(),
-            shape = RoundedCornerShape(13.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = colorResource(id = R.color.accent),
-                contentColor = colorResource(id = R.color.background)
-            )
-        ) {
+        Column(modifier = Modifier
+            .padding(top = 54.dp)) {
             Text(
-                text = "Зарегистрироваться",
-                fontSize = 14.sp,
+                text = "Email",
+                modifier = Modifier.padding(bottom = 12.dp),
+                fontSize = 16.sp,
                 fontFamily = Raleway,
-                fontWeight = FontWeight.Normal
+                fontWeight = FontWeight.Medium
             )
+            OutlinedTextField(
+                value = email,
+                onValueChange = { email = it },
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Text(
+                text = "Пароль",
+                modifier = Modifier.padding(top = 30.dp ,bottom = 12.dp),
+                fontSize = 16.sp,
+                fontFamily = Raleway,
+                fontWeight = FontWeight.Medium
+            )
+            OutlinedTextField(
+                value = password,
+                onValueChange = { password = it },
+                singleLine = true,
+                visualTransformation = PasswordVisualTransformation(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+                modifier = Modifier.fillMaxWidth()
+            )
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.End) {
+                Text(
+                    text = "Востановить",
+                    modifier = Modifier.padding(top = 12.dp, bottom = 24.dp),
+                    fontSize = 12.sp,
+                    fontFamily = Raleway,
+                    fontWeight = FontWeight.Normal,
+                    color = colorResource(id = R.color.sub_text_dark)
+                )
+            }
+            Button(
+                onClick = {
+                    println("Email: $email")
+                    println("Пароль: $password")
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp)
+                    .padding(top = 16.dp),
+                enabled =email.isNotBlank() &&
+                        password.isNotBlank(),
+                shape = RoundedCornerShape(13.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = colorResource(id = R.color.accent),
+                    contentColor = colorResource(id = R.color.background)
+                )
+            ) {
+                Text(
+                    text = "Войти",
+                    fontSize = 14.sp,
+                    fontFamily = Raleway,
+                    fontWeight = FontWeight.Normal
+                )
+            }
         }
     }
 }
