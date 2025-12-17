@@ -187,7 +187,7 @@ fun RegistrationScreen(navController: NavController = rememberNavController()) {
                     showEmailErrorDialog = true
                 }
             },
-            modifier = Modifier.padding(top = 20.dp )
+            modifier = Modifier.padding(top = 20.dp)
                 .width(335.dp)
                 .height(50.dp),
             enabled = isAgreed,
@@ -214,7 +214,7 @@ fun RegistrationScreen(navController: NavController = rememberNavController()) {
 
         ) {
             Text(
-                text = "Есть аккаунт? ",
+                text = "Есть аккаунт?",
                 fontSize = 16.sp,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 fontFamily = Raleway,

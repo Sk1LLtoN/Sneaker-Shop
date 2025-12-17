@@ -2,16 +2,23 @@ package com.example.sneaker_shop
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -20,9 +27,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -35,6 +45,7 @@ import com.example.sneaker_shop.ui.theme.Raleway
 fun SignIn(navController: NavController = rememberNavController()) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var passwordVisible by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -71,6 +82,7 @@ fun SignIn(navController: NavController = rememberNavController()) {
                 value = email,
                 onValueChange = { email = it },
                 singleLine = true,
+                shape = RoundedCornerShape(14.dp),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                 modifier = Modifier.fillMaxWidth()
             )
@@ -85,17 +97,43 @@ fun SignIn(navController: NavController = rememberNavController()) {
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
+                shape = RoundedCornerShape(14.dp),
                 singleLine = true,
-                visualTransformation = PasswordVisualTransformation(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                modifier = Modifier.fillMaxWidth()
+                visualTransformation = if (passwordVisible) {
+                    VisualTransformation.None
+                } else {
+                    PasswordVisualTransformation()
+                },
+                textStyle = TextStyle(
+                    fontFamily = Raleway,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 14.sp
+                ),
+                modifier = Modifier.fillMaxWidth(),
+                trailingIcon = {
+                    IconButton(
+                        onClick = { passwordVisible = !passwordVisible }
+                    ) {
+                        Icon(
+                            painter = painterResource(
+                                id = if (passwordVisible) {
+                                    R.drawable.eye_open
+                                } else {
+                                    R.drawable.eye_close
+                                }
+                            ),
+                            contentDescription = if (passwordVisible) "Скрыть пароль" else "Показать пароль",
+                            tint = colorResource(id = R.color.sub_text_dark)
+                        )
+                    }
+                }
             )
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.End) {
                 Text(
                     text = "Востановить",
-                    modifier = Modifier.padding(top = 12.dp, bottom = 24.dp),
+                    modifier = Modifier.padding(top = 12.dp),
                     fontSize = 12.sp,
                     fontFamily = Raleway,
                     fontWeight = FontWeight.Normal,
@@ -108,9 +146,9 @@ fun SignIn(navController: NavController = rememberNavController()) {
                     println("Пароль: $password")
                 },
                 modifier = Modifier
+                    .padding(top = 24.dp)
                     .fillMaxWidth()
-                    .height(50.dp)
-                    .padding(top = 16.dp),
+                    .height(50.dp),
                 enabled =email.isNotBlank() &&
                         password.isNotBlank(),
                 shape = RoundedCornerShape(13.dp),
@@ -122,6 +160,34 @@ fun SignIn(navController: NavController = rememberNavController()) {
                 Text(
                     text = "Войти",
                     fontSize = 14.sp,
+                    fontFamily = Raleway,
+                    fontWeight = FontWeight.Normal
+                )
+            }
+        }
+        Row(
+            modifier = Modifier.padding(top = 113.dp),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+
+        ) {
+            Text(
+                text = "Вы впервые?",
+                fontSize = 16.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                fontFamily = Raleway,
+                fontWeight = FontWeight.Normal
+            )
+            TextButton(
+                onClick = {
+                    navController.navigate("signin")
+                },
+                modifier = Modifier.padding(0.dp),
+                contentPadding = PaddingValues(0.dp)
+            ) {
+                Text(
+                    text = "Создать",
+                    fontSize = 16.sp,
                     fontFamily = Raleway,
                     fontWeight = FontWeight.Normal
                 )
