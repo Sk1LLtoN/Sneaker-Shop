@@ -24,7 +24,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.sneaker_shop.data.`object`.Supabase
 import com.example.sneaker_shop.ui.theme.Raleway
+import io.github.jan.supabase.gotrue.GoTrue
+import io.github.jan.supabase.gotrue.gotrue
+import kotlinx.coroutines.launch
 
 @Preview(showBackground = true)
 @Composable
@@ -40,6 +44,8 @@ fun RegistrationScreen(navController: NavController = rememberNavController()) {
     var emailErrorMessage by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
     var showSuccessDialog by remember { mutableStateOf(false) }
+    val coroutineScope = rememberCoroutineScope()
+    var isLoading by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -47,7 +53,7 @@ fun RegistrationScreen(navController: NavController = rememberNavController()) {
             .padding(horizontal = 20.dp, vertical = 44.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
 
-    ) {
+        ) {
         Text(
             text = "Регистрация",
             fontSize = 32.sp,
@@ -83,7 +89,7 @@ fun RegistrationScreen(navController: NavController = rememberNavController()) {
                     fontFamily = Raleway,
                     fontWeight = FontWeight.Normal,
                     fontSize = 14.sp
-                        ),
+                ),
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -175,22 +181,50 @@ fun RegistrationScreen(navController: NavController = rememberNavController()) {
 
         Button(
             onClick = {
-                if (isValidEmail(email)) {
-                    println("Имя: $name")
-                    println("Email: $email")
-                    println("Пароль: $password")
-                    println("Согласие: $isAgreed")
-                    showSuccessDialog = true
+                if (isValidEmail(email) && isAgreed) {
+                    isLoading = true
+                    coroutineScope.launch {
+                        try {
+                            /*println("Registering user: $email")
+
+                                val result = io.github.jan.supabase.gotrue.auth.signUp(
+                                Supabase.client,
+                                email = email,
+                                password = password
+                            )
+
+                            println("✅ Registration successful! User: ${result.user?.email}")
+                            showSuccessDialog = true*/
+
+                        } catch (e: Exception) {
+                            println("❌ Registration error: ${e.message}")
+                            e.printStackTrace()
+
+                            emailErrorMessage = when {
+                                e.message?.contains("already registered", ignoreCase = true) == true ->
+                                    "Пользователь уже зарегистрирован"
+                                e.message?.contains("Invalid email", ignoreCase = true) == true ->
+                                    "Неверный формат email"
+                                e.message?.contains("Password should be", ignoreCase = true) == true ->
+                                    "Пароль должен содержать минимум 6 символов"
+                                else -> "Ошибка регистрации: ${e.message ?: "Неизвестная ошибка"}"
+                            }
+                            showEmailErrorDialog = true
+                        } finally {
+                            isLoading = false
+                        }
+                    }
                 } else {
                     isEmailValid = false
                     emailErrorMessage = getEmailErrorMessage(email)
                     showEmailErrorDialog = true
                 }
             },
-            modifier = Modifier.padding(top = 20.dp)
+            modifier = Modifier
+                .padding(top = 20.dp)
                 .width(335.dp)
                 .height(50.dp),
-            enabled = isAgreed,
+            enabled = isAgreed && !isLoading,
             shape = RoundedCornerShape(13.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = colorResource(id = R.color.accent),
@@ -199,12 +233,20 @@ fun RegistrationScreen(navController: NavController = rememberNavController()) {
                 disabledContentColor = colorResource(id = R.color.background)
             )
         ) {
-            Text(
-                text = "Зарегистрироваться",
-                fontSize = 14.sp,
-                fontFamily = Raleway,
-                fontWeight = FontWeight.Normal
-            )
+            if (isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(20.dp),
+                    strokeWidth = 2.dp,
+                    color = colorResource(id = R.color.background)
+                )
+            } else {
+                Text(
+                    text = "Зарегистрироваться",
+                    fontSize = 14.sp,
+                    fontFamily = Raleway,
+                    fontWeight = FontWeight.Normal
+                )
+            }
         }
 
         Row(
