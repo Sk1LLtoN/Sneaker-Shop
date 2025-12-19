@@ -33,6 +33,9 @@ class MainActivity : ComponentActivity() {
                 composable("signin") {
                     SignIn(navController = navController)
                 }
+                composable("forgotpassword") {
+                    ForgotPassword(navController = navController)
+                }
             }
         }
     }

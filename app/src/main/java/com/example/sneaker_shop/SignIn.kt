@@ -23,6 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -87,7 +88,16 @@ fun SignIn(navController: NavController = rememberNavController()) {
                     fontFamily = Raleway,
                     fontWeight = FontWeight.Normal,
                     fontSize = 14.sp
-                )
+                ),
+                placeholder = {
+                    Text(
+                        text = "xyz@gmail.com",
+                        fontFamily = Raleway,
+                        textAlign = TextAlign.Center,
+                        fontWeight = FontWeight.Normal,
+                        color = colorResource(id = R.color.sub_text_dark)
+                    )
+                }
             )
 
             Text(
@@ -113,6 +123,15 @@ fun SignIn(navController: NavController = rememberNavController()) {
                     fontSize = 14.sp
                 ),
                 modifier = Modifier.fillMaxWidth(),
+                placeholder = {
+                    Text(
+                        text = ". . . . . .",
+                        fontFamily = Raleway,
+                        //textAlign = TextAlign.Center,
+                        fontWeight = FontWeight.Normal,
+                        color = colorResource(id = R.color.sub_text_dark)
+                    )
+                },
                 trailingIcon = {
                     IconButton(
                         onClick = { passwordVisible = !passwordVisible }
@@ -136,14 +155,22 @@ fun SignIn(navController: NavController = rememberNavController()) {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.End
             ) {
-                Text(
-                    text = "Восстановить",
-                    modifier = Modifier.padding(top = 12.dp),
-                    fontSize = 12.sp,
-                    fontFamily = Raleway,
-                    fontWeight = FontWeight.Normal,
-                    color = colorResource(id = R.color.sub_text_dark)
-                )
+                TextButton(
+                    onClick = {
+                        navController.navigate("forgotpassword")
+                    },
+                    modifier = Modifier.padding(0.dp),
+                    contentPadding = PaddingValues(0.dp)
+                ) {
+                    Text(
+                        text = "Восстановить",
+                        modifier = Modifier.padding(top = 12.dp),
+                        fontSize = 12.sp,
+                        fontFamily = Raleway,
+                        fontWeight = FontWeight.Normal,
+                        color = colorResource(id = R.color.sub_text_dark)
+                    )
+                }
             }
 
             Button(

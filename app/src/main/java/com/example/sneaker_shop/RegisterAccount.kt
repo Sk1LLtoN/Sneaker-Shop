@@ -18,6 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -78,7 +79,8 @@ fun RegistrationScreen(navController: NavController = rememberNavController()) {
                 modifier = Modifier.padding(bottom = 12.dp),
                 fontSize = 16.sp,
                 fontFamily = Raleway,
-                fontWeight = FontWeight.Medium
+                fontWeight = FontWeight.Medium,
+
             )
             OutlinedTextField(
                 value = name,
@@ -90,6 +92,15 @@ fun RegistrationScreen(navController: NavController = rememberNavController()) {
                     fontWeight = FontWeight.Normal,
                     fontSize = 14.sp
                 ),
+                placeholder = {
+                    Text(
+                        text = "xxxxxxxx",
+                        fontFamily = Raleway,
+                        textAlign = TextAlign.Center,
+                        fontWeight = FontWeight.Normal,
+                        color = colorResource(id = R.color.sub_text_dark)
+                    )
+                },
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -113,6 +124,15 @@ fun RegistrationScreen(navController: NavController = rememberNavController()) {
                 ),
                 modifier = Modifier.fillMaxWidth(),
                 isError = !isEmailValid && email.isNotEmpty(),
+                placeholder = {
+                    Text(
+                        text = "xyz@gmail.com",
+                        fontFamily = Raleway,
+                        textAlign = TextAlign.Center,
+                        fontWeight = FontWeight.Normal,
+                        color = colorResource(id = R.color.sub_text_dark)
+                    )
+                }
             )
 
             Text(
@@ -138,6 +158,15 @@ fun RegistrationScreen(navController: NavController = rememberNavController()) {
                     fontSize = 14.sp
                 ),
                 modifier = Modifier.fillMaxWidth(),
+                placeholder = {
+                    Text(
+                        text = ". . . . . .",
+                        fontFamily = Raleway,
+                        //textAlign = TextAlign.Center,
+                        fontWeight = FontWeight.Normal,
+                        color = colorResource(id = R.color.sub_text_dark)
+                    )
+                },
                 trailingIcon = {
                     IconButton(
                         onClick = { passwordVisible = !passwordVisible }
