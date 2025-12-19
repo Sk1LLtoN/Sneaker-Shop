@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -48,7 +50,22 @@ fun SignIn(navController: NavController = rememberNavController()) {
             .fillMaxSize()
             .padding(horizontal = 20.dp, vertical = 44.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
+    )
+    {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.Start
+        ) {
+            IconButton(
+                onClick = { navController.popBackStack() }
+            ) {
+                Icon(
+                    imageVector = Icons.Default.ArrowBack,
+                    contentDescription = "Назад"
+                )
+            }
+        }
         Text(
             text = "Привет!",
             fontSize = 32.sp,

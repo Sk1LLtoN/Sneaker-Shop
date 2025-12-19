@@ -36,6 +36,12 @@ class MainActivity : ComponentActivity() {
                 composable("forgotpassword") {
                     ForgotPassword(navController = navController)
                 }
+                composable("verification") {
+                    VerificationScreen(navController = navController)
+                }
+                composable("Createnewpassword") {
+                    CreateNewPassword(navController = navController)
+                }
             }
         }
     }
