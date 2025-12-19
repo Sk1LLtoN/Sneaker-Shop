@@ -3,33 +3,46 @@ package com.example.sneaker_shop.ui.theme
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.sp
-
-private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
-)
-
-private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
-)
 
 @Composable
 fun SneakerShopTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
-    val colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme
-
+    val colorScheme = if (darkTheme) {
+        darkColorScheme(
+            primary = Purple80,
+            secondary = PurpleGrey80,
+            tertiary = Pink80
+        )
+    } else {
+        lightColorScheme(
+            primary = Purple40,
+            secondary = PurpleGrey40,
+            tertiary = Pink40
+        )
+    }
 
     MaterialTheme(
         colorScheme = colorScheme,
+        content = content
+    )
+}
+
+@Composable
+fun SneakerShopSplashTheme(
+    content: @Composable () -> Unit
+) {
+    MaterialTheme(
+        colorScheme = lightColorScheme(
+            primary = SplashBlue,
+            secondary = SplashBlue,
+            tertiary = SplashBlue,
+            background = SplashBlue,
+            surface = SplashBlue,
+            primaryContainer = SplashBlue,
+            secondaryContainer = SplashBlue
+        ),
         content = content
     )
 }

@@ -3,14 +3,7 @@ package com.example.sneaker_shop
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-//import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -18,29 +11,34 @@ import com.example.sneaker_shop.ui.theme.SneakerShopTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        //enableEdgeToEdge()
-        setContent {
-            val navController = rememberNavController()
 
-            NavHost(
-                navController = navController,
-                startDestination = "register"
-            ) {
-                composable("register") {
-                    RegistrationScreen(navController = navController)
-                }
-                composable("signin") {
-                    SignIn(navController = navController)
-                }
-                composable("forgotpassword") {
-                    ForgotPassword(navController = navController)
-                }
-                composable("verification") {
-                    VerificationScreen(navController = navController)
-                }
-                composable("Createnewpassword") {
-                    CreateNewPassword(navController = navController)
+        val splashScreen = installSplashScreen()
+
+        super.onCreate(savedInstanceState)
+
+        setContent {
+            SneakerShopTheme {
+                val navController = rememberNavController()
+
+                NavHost(
+                    navController = navController,
+                    startDestination = "register"
+                ) {
+                    composable("register") {
+                        RegistrationScreen(navController = navController)
+                    }
+                    composable("signin") {
+                        SignIn(navController = navController)
+                    }
+                    composable("forgotpassword") {
+                        ForgotPassword(navController = navController)
+                    }
+                    composable("verification") {
+                        VerificationScreen(navController = navController)
+                    }
+                    composable("createnewpassword") {
+                        CreateNewPassword(navController = navController)
+                    }
                 }
             }
         }
