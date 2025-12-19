@@ -50,7 +50,7 @@ fun RegistrationScreen(navController: NavController = rememberNavController()) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 20.dp, vertical = 44.dp),
+            .padding(horizontal = 20.dp, vertical = 30.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
 
         ) {
