@@ -39,6 +39,9 @@ class MainActivity : ComponentActivity() {
                     composable("createnewpassword") {
                         CreateNewPassword(navController = navController)
                     }
+                    composable("home") {
+                        HomeScreen(navController = navController)
+                    }
                 }
             }
         }

@@ -2,14 +2,6 @@ package com.example.sneaker_shop
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -32,6 +24,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.sneaker_shop.ui.theme.Raleway
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Preview(showBackground = true)
 @Composable
@@ -41,17 +35,20 @@ fun SignIn(navController: NavController = rememberNavController()) {
     var passwordVisible by remember { mutableStateOf(false) }
     var showEmailErrorDialog by remember { mutableStateOf(false) }
     var showEmptyFieldsDialog by remember { mutableStateOf(false) }
+    var showSuccessDialog by remember { mutableStateOf(false) }
+    var isLoading by remember { mutableStateOf(false) }
     var isEmailValid by remember { mutableStateOf(true) }
     var emailErrorMessage by remember { mutableStateOf("") }
     var emptyFieldsErrorMessage by remember { mutableStateOf("") }
+
+    val coroutineScope = rememberCoroutineScope()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 20.dp, vertical = 44.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-    )
-    {
+    ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth(),
@@ -144,7 +141,6 @@ fun SignIn(navController: NavController = rememberNavController()) {
                     Text(
                         text = ". . . . . .",
                         fontFamily = Raleway,
-                        //textAlign = TextAlign.Center,
                         fontWeight = FontWeight.Normal,
                         color = colorResource(id = R.color.sub_text_dark)
                     )
@@ -205,8 +201,43 @@ fun SignIn(navController: NavController = rememberNavController()) {
                         showEmptyFieldsDialog = true
                     }
                     else if (isValidEmail(email)) {
-                        println("Email: $email")
-                        println("Пароль: $password")
+                        isLoading = true
+
+                        coroutineScope.launch {
+                            try {
+                                println("Вход: Email: $email, Пароль: $password")
+                                /*
+                                val result = Supabase.client.gotrue.signInWith(
+                                    email = email,
+                                    password = password
+                                )
+
+                                if (result != null) {
+                                    println("✅ Вход успешен!")
+                                    showSuccessDialog = true
+                                } else {
+                                    emailErrorMessage = "Неверный email или пароль"
+                                    showEmailErrorDialog = true
+                                }
+                                */
+                                delay(1500)
+                                println("✅ Успешный вход")
+                                showSuccessDialog = true
+
+                            } catch (e: Exception) {
+                                println("❌ Ошибка входа: ${e.message}")
+                                emailErrorMessage = when {
+                                    e.message?.contains("Invalid login", ignoreCase = true) == true ->
+                                        "Неверный email или пароль"
+                                    e.message?.contains("User not found", ignoreCase = true) == true ->
+                                        "Пользователь не найден"
+                                    else -> "Ошибка входа: ${e.message ?: "Неизвестная ошибка"}"
+                                }
+                                showEmailErrorDialog = true
+                            } finally {
+                                isLoading = false
+                            }
+                        }
                     } else {
                         isEmailValid = false
                         emailErrorMessage = getEmailErrorMessage(email)
@@ -223,14 +254,23 @@ fun SignIn(navController: NavController = rememberNavController()) {
                     contentColor = colorResource(id = R.color.background),
                     disabledContainerColor = colorResource(id = R.color.disable),
                     disabledContentColor = colorResource(id = R.color.background)
-                )
+                ),
+                enabled = !isLoading
             ) {
-                Text(
-                    text = "Войти",
-                    fontSize = 14.sp,
-                    fontFamily = Raleway,
-                    fontWeight = FontWeight.Normal
-                )
+                if (isLoading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(20.dp),
+                        strokeWidth = 2.dp,
+                        color = colorResource(id = R.color.background)
+                    )
+                } else {
+                    Text(
+                        text = "Войти",
+                        fontSize = 14.sp,
+                        fontFamily = Raleway,
+                        fontWeight = FontWeight.Normal
+                    )
+                }
             }
         }
 
@@ -263,7 +303,69 @@ fun SignIn(navController: NavController = rememberNavController()) {
         }
     }
 
-    // Диалоговое окно для отображения ошибки email
+    if (showSuccessDialog) {
+        AlertDialog(
+            onDismissRequest = {
+                showSuccessDialog = false
+                navController.navigate("home") {
+                    popUpTo("signin") { inclusive = true }
+                }
+            },
+            title = {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = "Вход выполнен!",
+                        fontFamily = Raleway,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 20.sp,
+                        textAlign = TextAlign.Center
+                    )
+                }
+            },
+            text = {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = "Вы успешно вошли в свой аккаунт.",
+                        fontFamily = Raleway,
+                        fontWeight = FontWeight.Normal,
+                        fontSize = 14.sp,
+                        color = colorResource(id = R.color.sub_text_dark),
+                        textAlign = TextAlign.Center
+                    )
+                }
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        showSuccessDialog = false
+                        navController.navigate("home") {
+                            popUpTo("signin") { inclusive = true }
+                        }
+                    },
+                    shape = RoundedCornerShape(8.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = colorResource(id = R.color.accent)
+                    ),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = "Перейти в приложение",
+                        fontFamily = Raleway,
+                        fontWeight = FontWeight.Medium
+                    )
+                }
+            },
+            containerColor = MaterialTheme.colorScheme.surface,
+            shape = RoundedCornerShape(16.dp)
+        )
+    }
+
     if (showEmailErrorDialog) {
         AlertDialog(
             onDismissRequest = {
@@ -271,7 +373,7 @@ fun SignIn(navController: NavController = rememberNavController()) {
             },
             title = {
                 Text(
-                    text = "Ошибка email",
+                    text = "Ошибка входа",
                     fontFamily = Raleway,
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 18.sp
@@ -282,14 +384,20 @@ fun SignIn(navController: NavController = rememberNavController()) {
                     text = emailErrorMessage,
                     fontFamily = Raleway,
                     fontWeight = FontWeight.Normal,
-                    fontSize = 14.sp
+                    fontSize = 14.sp,
+                    color = colorResource(id = R.color.sub_text_dark)
                 )
             },
             confirmButton = {
-                TextButton(
+                Button(
                     onClick = {
                         showEmailErrorDialog = false
-                    }
+                    },
+                    shape = RoundedCornerShape(8.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = colorResource(id = R.color.accent)
+                    ),
+                    modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
                         text = "OK",
@@ -297,7 +405,9 @@ fun SignIn(navController: NavController = rememberNavController()) {
                         fontWeight = FontWeight.Medium
                     )
                 }
-            }
+            },
+            containerColor = MaterialTheme.colorScheme.surface,
+            shape = RoundedCornerShape(16.dp)
         )
     }
 
@@ -319,14 +429,20 @@ fun SignIn(navController: NavController = rememberNavController()) {
                     text = emptyFieldsErrorMessage,
                     fontFamily = Raleway,
                     fontWeight = FontWeight.Normal,
-                    fontSize = 14.sp
+                    fontSize = 14.sp,
+                    color = colorResource(id = R.color.sub_text_dark)
                 )
             },
             confirmButton = {
-                TextButton(
+                Button(
                     onClick = {
                         showEmptyFieldsDialog = false
-                    }
+                    },
+                    shape = RoundedCornerShape(8.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = colorResource(id = R.color.accent)
+                    ),
+                    modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
                         text = "OK",
@@ -334,7 +450,9 @@ fun SignIn(navController: NavController = rememberNavController()) {
                         fontWeight = FontWeight.Medium
                     )
                 }
-            }
+            },
+            containerColor = MaterialTheme.colorScheme.surface,
+            shape = RoundedCornerShape(16.dp)
         )
     }
 }
